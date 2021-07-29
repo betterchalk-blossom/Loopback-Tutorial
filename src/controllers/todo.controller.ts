@@ -4,27 +4,21 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
-import {Todo} from '../models';
+import {Todo, TodoList} from '../models';
 import {TodoRepository} from '../repositories';
 
 export class TodoController {
   constructor(
     @repository(TodoRepository)
-    public todoRepository : TodoRepository,
-  ) {}
+    public todoRepository: TodoRepository,
+  ) { }
 
   @post('/todos')
   @response(200, {
@@ -146,5 +140,10 @@ export class TodoController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.todoRepository.deleteById(id);
+  }
+  async getTodoList(
+    @param.path.number('id') id: typeof Todo.prototype.id,
+  ): Promise<TodoList> {
+    return this.todoRepository.todoList(id);
   }
 }
